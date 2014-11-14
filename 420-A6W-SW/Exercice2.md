@@ -144,7 +144,7 @@ Fonction CreationCarte20x30(): Carte
    c.dim_y <- 30
 
    // Création d un tableau de String de dimension [x,y]
-   c.tiles <- String[x, y]
+   c.tiles <- String[c.dim_x, c.dim_y]
 
    // Mettre dans chaque entrée du tableau, la valeur "sol"
    Pour i de 0 a c.dim_x-1 Faire
@@ -341,7 +341,7 @@ FinFonction
 Définir une structure qui permet de représenter un joueur. 
 Un joueur doit avoir comme attributs:
 
-* Une position (_hint: Vous avez défini une structure `Position`_)
+* Une position (_indice: Vous avez défini une structure `Position`_)
 * Un nombre de point de vie actuel
 * Un nombre de point de vie maximal
 * Une arme de type `Arme`
