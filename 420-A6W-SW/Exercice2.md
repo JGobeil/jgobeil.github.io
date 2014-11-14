@@ -24,7 +24,7 @@ Fonction Main():
    // Creation des armes, armures et ennemis
    Arme[] armes <- ListeDesArmes()
    Armure[] armures <- ListeDesArmures()
-   Ennemi[] ennemis <- ListeDesEnnemis()
+   Ennemi[] ennemis <- ListeDesEnnemis20x30()
 
    // Creation du joueur
    Joueur joueur <- CreationJoueur(0, 0, 3, armes[0], armures[0])
@@ -38,7 +38,6 @@ Fonction Main():
 
    TantQue action != "Quitter" Faire
 
-      // Lire le clavier et mettre le retour dans la variable touche
       touche <- LireClavier()
 
       // Obtenir l action correspondant à la touche
@@ -52,23 +51,32 @@ Fonction Main():
          // Calculer la nouvelle position
          Position nPos <- AdditionPosition(joueur.pos, deplacement) 
 
-         // La tile cible (par défaut considéré extérieur)
+         // Le type de terrain de la nouvelle position
+         // Par défaut considéré hors de la carte
          String tile <- "PasDansLaCarte"
 
          // Vérifiez que la nouvelle position est à l'intérieur de la carte
          Si EstDansLaCarte(carte, nouvellePos) Alors
             // Obtenir l element de carte à cet endroit
             tile <- carte.tiles[nPos.x, nPos.y]
-         FinSi
+
+            // Faire une condition pour chaque cas possible 
+            // Un même 'tile' peut avoir plusieurs conséquences?
          
-         // Vérifier si la nouvelle position correspond à un obstacle
-         Si EstUnObstacle(tile) Alors
-            MessageObstacle(tile)
+            // Vérifier si cible correspond à un obstacle
+            Si EstUnObstacle(tile) Alors
+               // Indiquer au joueur qu'il ne peut aller a cet endroit 
+               MessageObstacle(tile)
+            FinSi
 
-         Sinon Si EstUnEnnemis(ennemis, nouvellePos) Alors
-            // Attaquer 
-            AttaquerEnnemi(joueur, ennemis, nouvellePos)
-
+            // Chercher si un ennemi est présent à cet endroit
+            int ei = TrouverEnnemi(ennemis, nouvellePos)
+               
+            // Attaquer si un ennemi s'y trouve
+            Si  ei >= 0 Alors
+               // Attaquer 
+               AttaquerEnnemi(joueur, ennemis[e])
+            FinSi
          FinSi
       FinSi
    FinTantQue
@@ -91,6 +99,28 @@ Structure Carte:
 FinStructure
 ```
 
+#### Exemple
+À titre d'exemple, une structure Carte de dimension 4x5, avec un mur qui 
+va de la position [2,2] à la position [4,2] et un arbre à la
+position [2,0] peut être représenté schématiquement comme:
+
+```
+int dim_x = 4
+int dim_y = 5
+String[,] tiles = +-------+-------+-------+-------+
+                  | "sol" | "sol" | "sol" | "sol" | [0, ]
+                  +-------+-------+-------+-------+
+                  | "sol" | "sol" | "sol" | "sol" | [1, ]
+                  +-------+-------+-------+-------+
+                  |"arbre"| "sol" | "mur" | "sol" | [2, ]
+                  +-------+-------+-------+-------+
+                  | "sol" | "sol" | "mur" | "sol" | [3, ]
+                  +-------+-------+-------+-------+
+                  | "sol" | "sol" | "mur" | "sol" | [4, ] 
+                  +-------+-------+-------+-------+
+                    [ ,0]   [ ,1]   [ ,2]   [ ,3]
+```
+
 ### Fonction de création d'une carte de dimension 20 x 30
 Nous allons maintenant définir une fonction permettant de créer une carte 
 standard de dimension 20 x 30. Il serait possible de créer d'autre fonction
@@ -103,7 +133,7 @@ Pour l'instant contentons d'une simple carte prédéfinie.
 // Creation d une nouvelle carte
 // Retourne: Carte
 // 	Retourne une nouvelle carte de dimension 20 x 30
-Fonction CreationCarte20x30(int x, int y): Carte
+Fonction CreationCarte20x30(): Carte
    // Déclaration d une variable de type c
    Carte c 
    
@@ -131,10 +161,14 @@ Fonction CreationCarte20x30(int x, int y): Carte
 FinFonction
 ``` 
 
+Nous allons utiliser la procédure `DessinerCarte20x30` pour ajouter des éléments autre que "sol" à notre carte.
+
+_Il serait intéressant de créer une fonction qui permettrait de lire une carte dans un fichier.
+
 ### Exercice: Définir la procédure `DessinerCarte20x30`
 Dessinez une petite carte de dimension 20x30. Vous pouvez y mettre des murs, des roches, ou tout autres éléments de décors que vous trouvez intéressant. 
 
-Une fois la carte dessinée, écrivez la procédure `DessinerCarte20x30(Carte crt)`, qui va permettre d'initialiser cette carte dans le jeu. Donner un nom, sous la forme d'un `String`, aux différents éléments de la carte ("mur", "roche", ...).
+Écrivez la procédure `DessinerCarte20x30(Carte crt)`, qui va permettre d'initialiser cette carte dans le jeu. Donner un nom, sous la forme d'un `String`, aux différents éléments de la carte ("mur", "roche", ...).
 
 ```C
 // Dessiner la carte 20x30
@@ -325,8 +359,37 @@ Définir une fonction pour créer et initialiser un nouveau joueur
 //      Armure armure: Armure initiale
 // Retourne: Joueur
 // 	La nouvelle variable position
-Fonction CreationJoueur(Position pos, int pv, Arme arme, Armure armu): Joueur
+Fonction CreationJoueur(int x, int y, int pv, Arme arme, Armure armu): Joueur
 ```
+
+## Les ennemis
+
+### La structure `Ennemi`
+La structure ennemi doit avoir les informations suivantes:
+* Un nom
+* Un nombre de point d'attaque
+* Un nombre de point de défense
+* Un nombre de point de vie
+* Une `Position`
+
+### Fonction `ListeDesEnnemis()`
+Écrire la fonction `ListeDesEnnemis20x30()` qui permet de créer et de placer les ennemis.
+
+### Exercice: Fonction `TrouverEnnemi(Ennemi[] e, Position p)`
+```C
+// Chercher si un ennemi est à la position p
+// Paramètres:
+//      Ennemi[] e: Liste des ennemis
+//      Position p: Position où chercher s'il y a un ennemi
+// Retourne: int
+//      L'emplacement dans la liste ennemi de l'énnemi qui est à la
+//      position p. Retourne -1 s'il n'y a pas d'ennemi à la postion p
+Fonction TrouverEnnemi(Ennemi[] e, Position p): int
+```
+
+### Exercice: Fonction `AttaquerEnnemi(Joueur j, Ennemi e)`
+Définir des régles de combat et les implémenters. L'effet de l'attaque et de la défense? Une attaque par tour, ou jusqu'à ce mort s'en suive? Le joueur se déplace si il gagne le combat? .... 
+
 
 ## Fonctions prédéfinies
 Nous allons considérer quelques fonctions comme existantes. Il s'agit plus de question d'implémentation techniques et sont largement dépendantes de la plateformes et du langage utilisées.
