@@ -366,6 +366,7 @@ Fonction CreationJoueur(int x, int y, int pv, Arme arme, Armure armu): Joueur
 
 ### La structure `Ennemi`
 La structure ennemi doit avoir les informations suivantes:
+
 * Un nom
 * Un nombre de point d'attaque
 * Un nombre de point de défense
