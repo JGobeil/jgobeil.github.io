@@ -24,7 +24,9 @@ Fonction Main():
    // Creation des armes, armures et ennemis
    Arme[] armes <- ListeDesArmes()
    Armure[] armures <- ListeDesArmures()
-   Ennemi[] ennemis <- ListeDesEnnemis20x30()
+   Ennemi[] ennemis <- ListeDesEnnemis()
+
+   P
 
    // Creation du joueur
    Joueur joueur <- CreationJoueur(0, 0, 3, armes[0], armures[0])
@@ -57,6 +59,8 @@ Fonction Main():
 
          // Vérifiez que la nouvelle position est à l'intérieur de la carte
          Si EstDansLaCarte(carte, nouvellePos) Alors
+            Booleen deplacer = Vrai
+
             // Obtenir l element de carte à cet endroit
             tile <- carte.tiles[nPos.x, nPos.y]
 
@@ -65,8 +69,9 @@ Fonction Main():
 
             // Vérifier si cible correspond à un obstacle
             Si EstUnObstacle(tile) Alors
-               // Indiquer au joueur qu'il ne peut aller a cet endroit
+               // Indiquer au joueur qu il ne peut aller a cet endroit
                MessageObstacle(tile)
+               deplacer = Faux
             FinSi
 
             // Chercher si un ennemi est présent à cet endroit
@@ -76,6 +81,12 @@ Fonction Main():
             Si  ei >= 0 Alors
                // Attaquer
                AttaquerEnnemi(joueur, ennemis[e])
+               deplacer = Faux
+            FinSi
+
+            // Deplacer le joueur
+            Si deplacer == Vrai Alors
+               joueur.pos <- nPos
             FinSi
          FinSi
       FinSi
@@ -95,7 +106,8 @@ Nous allons définir une structure afin de contenir les informations pertinentes
 Structure Carte:
    int dim_x // La dimension en x de la carte
    int dim_y // La dimension en y de la carte
-   String[,] tiles // Un tableau 2D de String.
+   String[,] tiles // Un tableau 2D de String
+   Ennemi[] ennemis // Listes des ennemis
 FinStructure
 ```
 
@@ -131,9 +143,11 @@ Pour l'instant contentons d'une simple carte prédéfinie.
 
 ```C
 // Creation d une nouvelle carte
+// Parametres:
+//      Ennemi[] ennemis: Liste des ennemis
 // Retourne: Carte
 // 	Retourne une nouvelle carte de dimension 20 x 30
-Fonction CreationCarte20x30(): Carte
+Fonction CreationCarte20x30(Ennemi[] ennemis): Carte
    // Déclaration d une variable de type c
    Carte c
 
@@ -156,6 +170,9 @@ Fonction CreationCarte20x30(): Carte
    // Ajouter d'autres éléments
    DessinerCarte20x30(c)
 
+   // Ajouter les ennemis
+   AjouterEnnemis20x30(c, ennemis)
+
    // Retourner la nouvelle carte
    Retourne c
 FinFonction
@@ -175,9 +192,19 @@ Dessinez une petite carte de dimension 20x30. Vous pouvez y mettre des murs, des
 // Paramètres:
 // 	Carte crt: La carte à ajouter des éléments
 Procedure DessinerCarte20x30(Carte crt)
-   //
    crt[3, 3] <- "Arbre"
+   Pour i de 5 a 10 Faire
+      crt[i, 7] <- "Mur"
+   FinPour
+FinProcedure
 ```
+
+### Exercice: Procedure `AjouterEnnemis20x30`
+Créer une procédure qui permet de rajouter les ennemis dans la carte.
+
+1. Initialiser la liste des ennemis de la carte ( 6 ennemis)
+2. Ajouter les ennemis ( ennemis de niveau 1 et 2 seulement)
+3. Postionner de façon aléatoire dans la carte les ennemis. Ne pas les positionner sur des obstacles.
 
 ## La structure `Position`
 
@@ -204,7 +231,7 @@ Définir une fonction pour créer et initialiser facilement une nouvelle `Positi
 // Retourne: Position
 //      La nouvelle position
 Fonction CreerPosition(int x, int y): Position
-   // Creer une nouvelle variabled de type Position
+   // Creer une nouvelle variable de type Position
    Position p
 
    // Initialiser les valeurs de la position
@@ -293,9 +320,9 @@ FinFonction
 // Retourne: Booleen
 //      Vrai si p est dans la carte, sinon retourne faux
 Fonction EstDansLaCarte(Carte c, Position p): Booleen
-   Si p.x < 0 ou p.x >= carte.dim_x Alors
+   Si p.x < 0 ou p.x >= c.dim_x Alors
       Retourne Faux
-   Sinon Si p.y < 0 ou p.y >= carte.dim_y Alors
+   Sinon Si p.y < 0 ou p.y >= c.dim_y Alors
       Retourne Faux
    Sinon
       Retourne Vrai
@@ -392,7 +419,7 @@ Définir la fonction `ListeDesArmures()` qui permet d'obtenir la liste des armur
 // 	Une liste d armures
 Fonction ListeDesArmures(): Armures[]
    // Creation d'une liste d'armures
-   Armues[4] a
+   Armure[4] a
 
    // Armure 1
    a[0].nom <- "T-shirt de Spider-man"
@@ -433,7 +460,7 @@ Structure Joueur
    int pv
    int pv_max
    Arme arme
-   Armure Armure
+   Armure armure
 FinStructure
 ```
 
@@ -443,7 +470,8 @@ Définir une fonction pour créer et initialiser un nouveau joueur
 ```C
 // Creation et initialisation d un nouveau joueur
 // Paramètres:
-// 	Position pos: Position initale
+//      int x: position en x
+//      int y: position en y
 //      int pv: Nombre de point de vie initial (et maximum)
 //      Arme arme: Arme initiale
 //      Armure armure: Armure initiale
@@ -453,9 +481,11 @@ Fonction CreationJoueur(int x, int y, int pv, Arme arme, Armure armu): Joueur
    Joueur j
    j.pos <- CreerPosition(x, y)
    j.pv <- pv
+   j.pv_max <- pv
    j.arme <- arme
    j.armure <- armu
    Retourne j
+FinFonction
 ```
 
 ## Les ennemis
@@ -469,8 +499,51 @@ La structure ennemi doit avoir les informations suivantes:
 * Un nombre de point de vie
 * Une `Position`
 
+```C
+Structure Ennemi
+   String nom
+   Position pos
+   int pv
+   int attaque
+   int defense
+FinStructure
+```
+
 ### Fonction `ListeDesEnnemis()`
 Écrire la fonction `ListeDesEnnemis20x30()` qui permet de créer et de placer les ennemis.
+
+```C
+// Creer la liste des ennemis
+// Retourne: Ennemi[]
+//      La liste des ennemis
+Fonction ListeEnnemis(): Ennemi[]
+   // Creer le tableau des ennemis
+   Ennemis[4] e
+
+   e[0].nom = "Slime"
+   int pv = 2
+   int attaque = 2
+   int defense = 0
+
+   e[1].nom = "Kobolt"
+   e[1].pv = 4
+   int attaque = 3
+   int defense = 2
+
+   e[2].nom = "Gobelin"
+   e[2].pv = 7
+   int attaque = 6
+   int defense = 4
+
+   e[3].nom = "Dragon"
+   e[3].pv = 1500
+   int attaque = 300
+   int defense = 1000
+
+   Retourne e
+FinFonction
+```
+
 
 ### Exercice: Fonction `TrouverEnnemi(Ennemi[] e, Position p)`
 ```C
