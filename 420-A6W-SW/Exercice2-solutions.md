@@ -520,25 +520,29 @@ Fonction ListeEnnemis(): Ennemi[]
    // Creer le tableau des ennemis
    Ennemis[4] e
 
-   e[0].nom = "Slime"
-   int pv = 2
-   int attaque = 2
-   int defense = 0
+   e[0].nom <- "Slime"
+   e[0].pv <- 2
+   e[0].pos <- CreerPosition(0, 0)
+   e[0].attaque <- 2
+   e[0].defense <- 0
 
-   e[1].nom = "Kobolt"
-   e[1].pv = 4
-   int attaque = 3
-   int defense = 2
+   e[1].nom <- "Kobolt"
+   e[1].pv <- 4
+   e[0].pos <- CreerPosition(0, 0)
+   e[1].attaque <- 3
+   e[1].defense <- 1
 
    e[2].nom = "Gobelin"
    e[2].pv = 7
-   int attaque = 6
-   int defense = 4
+   e[2].pos <- CreerPosition(0, 0)
+   e[2].attaque <- 5
+   e[2].defense <- 7
 
    e[3].nom = "Dragon"
    e[3].pv = 1500
-   int attaque = 300
-   int defense = 1000
+   e[3].pos <- CreerPosition(0, 0)
+   e[3].attaque <- 300
+   e[3].defense <- 1000
 
    Retourne e
 FinFonction
