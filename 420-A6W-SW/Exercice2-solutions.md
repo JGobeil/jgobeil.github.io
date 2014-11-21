@@ -216,7 +216,7 @@ Procedure AjouterEnnemis20x30(Carte c, Ennemi[] e):
    c.ennemis <- Ennemi[6]
 
    // Placer différent type d'ennemis dans la liste
-   Pour i de 0 à 5 Faire
+   Pour i de 0 a 5 Faire
       Si i < 3 Alors
          c.ennemis[i] <- e[0]
       Sinon Si i < 5 Alors
@@ -230,7 +230,7 @@ Procedure AjouterEnnemis20x30(Carte c, Ennemi[] e):
    c.ennemis[5].pos <- CreerPosition(c.dim_x - 1, c.dim_y - 1)
 
    // Positionner les autres ennemis
-   Pour i de 0 à 4 Faire
+   Pour i de 0 a 4 Faire
       c.ennemis[i].pos <- PositionAleatoireLibre(c)
    Fin Pour
 FinProcedure
@@ -244,7 +244,7 @@ FinProcedure
 //      Une position libre dans la carte
 Fonction PositionAleatoireLibre(Carte c): Positon
    Faire
-      Position p <- CreerPosition(Random(0, c.dim_x), Random(0, c.dim_y))
+      Position p <- CreerPosition(Random(0, c.dim_x-1), Random(0, c.dim_y-1))
       Booleen occupe <- Faux
       Si EstUnObstacle(c, p) ou EstUnEnnemi(c.ennemi, p) Alors
          occupe <- Vrai
