@@ -1,6 +1,6 @@
 ---
 layout: page
-title:  "420-A6W-SW/Exercices2"
+title:  "A6W - Exercice 2 (solutionné)"
 date:   2014-11-11 23:29:00
 categories: A6W, Exercices, Algorithme
 ---

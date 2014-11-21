@@ -1,6 +1,6 @@
 ---
 layout: page
-title:  "420-A6W-SW/Exercices2"
+title:  "A6W Exercices"
 date:   2014-11-11 23:29:00
 categories: A6W, Exercices, Algorithme
 ---
@@ -49,7 +49,7 @@ Fonction Main():
          Pos deplacement <- DeplacementDeLaTouche(touche)
 
          // Calculer la nouvelle position
-         Position nPos <- AdditionPosition(joueur.pos, deplacement) 
+         Position nPos <- AdditionPosition(joueur.pos, deplacement)
 
          // Le type de terrain de la nouvelle position
          // Par défaut considéré hors de la carte
@@ -60,21 +60,21 @@ Fonction Main():
             // Obtenir l element de carte à cet endroit
             tile <- carte.tiles[nPos.x, nPos.y]
 
-            // Faire une condition pour chaque cas possible 
+            // Faire une condition pour chaque cas possible
             // Un même 'tile' peut avoir plusieurs conséquences?
-         
+
             // Vérifier si cible correspond à un obstacle
             Si EstUnObstacle(tile) Alors
-               // Indiquer au joueur qu'il ne peut aller a cet endroit 
+               // Indiquer au joueur qu'il ne peut aller a cet endroit
                MessageObstacle(tile)
             FinSi
 
             // Chercher si un ennemi est présent à cet endroit
             int ei = TrouverEnnemi(ennemis, nouvellePos)
-               
+
             // Attaquer si un ennemi s'y trouve
             Si  ei >= 0 Alors
-               // Attaquer 
+               // Attaquer
                AttaquerEnnemi(joueur, ennemis[e])
             FinSi
          FinSi
@@ -100,7 +100,7 @@ FinStructure
 ```
 
 #### Exemple
-À titre d'exemple, une structure Carte de dimension 4x5, avec un mur qui 
+À titre d'exemple, une structure Carte de dimension 4x5, avec un mur qui
 va de la position [2,2] à la position [4,2] et un arbre à la
 position [2,0] peut être représenté schématiquement comme:
 
@@ -116,13 +116,13 @@ String[,] tiles = +-------+-------+-------+-------+
                   +-------+-------+-------+-------+
                   | "sol" | "sol" | "mur" | "sol" | [3, ]
                   +-------+-------+-------+-------+
-                  | "sol" | "sol" | "mur" | "sol" | [4, ] 
+                  | "sol" | "sol" | "mur" | "sol" | [4, ]
                   +-------+-------+-------+-------+
                     [ ,0]   [ ,1]   [ ,2]   [ ,3]
 ```
 
 ### Fonction de création d'une carte de dimension 20 x 30
-Nous allons maintenant définir une fonction permettant de créer une carte 
+Nous allons maintenant définir une fonction permettant de créer une carte
 standard de dimension 20 x 30. Il serait possible de créer d'autre fonction
 de création afin de créer des cartes différentes, ou même de créer des cartes
 aléatoirement.
@@ -135,8 +135,8 @@ Pour l'instant contentons d'une simple carte prédéfinie.
 // 	Retourne une nouvelle carte de dimension 20 x 30
 Fonction CreationCarte20x30(): Carte
    // Déclaration d une variable de type c
-   Carte c 
-   
+   Carte c
+
    // Assigner 20 à la dimension en x de la carte
    c.dim_x <- 20
 
@@ -159,14 +159,14 @@ Fonction CreationCarte20x30(): Carte
    // Retourner la nouvelle carte
    Retourne c
 FinFonction
-``` 
+```
 
 Nous allons utiliser la procédure `DessinerCarte20x30` pour ajouter des éléments autre que "sol" à notre carte.
 
 _Il serait intéressant de créer une fonction qui permettrait de lire une carte dans un fichier.
 
 ### Exercice: Définir la procédure `DessinerCarte20x30`
-Dessinez une petite carte de dimension 20x30. Vous pouvez y mettre des murs, des roches, ou tout autres éléments de décors que vous trouvez intéressant. 
+Dessinez une petite carte de dimension 20x30. Vous pouvez y mettre des murs, des roches, ou tout autres éléments de décors que vous trouvez intéressant.
 
 Écrivez la procédure `DessinerCarte20x30(Carte crt)`, qui va permettre d'initialiser cette carte dans le jeu. Donner un nom, sous la forme d'un `String`, aux différents éléments de la carte ("mur", "roche", ...).
 
@@ -185,7 +185,7 @@ Procedure DessinerCarte20x30(Carte crt)
 Définir une structure qui permet de représenter une position sur la carte. Une position peut-être représentée par deux `int`, une pour la valeur en x et l'autre pour la valeur en y.
 
 ### Exercice: Définir une fonction de création
-Définir une fonction pour créer et initialiser facilement une nouvelle `Position`. 
+Définir une fonction pour créer et initialiser facilement une nouvelle `Position`.
 
 #### Prototype de la fonction
 ```C
@@ -209,7 +209,7 @@ Nous allons maintenant définir quelques fonction qui nous permettrons de manipu
 //      int x: valeur à ajouter en x
 //      int y: valeur à ajouter en y
 // Retourne: Position
-//      Retourne la nouvelle position  
+//      Retourne la nouvelle position
 Fonction PosPlusXy(Position p, int x, int y): Position
    Retourne CreerPosition(p.x + x, p.y + y)
 FinFonction
@@ -265,7 +265,7 @@ Fonction ListeDesArmes(): Arme[]
    // Creation d'une liste d'armes
    Arme[4] a
 
-   // Arme 1 
+   // Arme 1
    a[0].nom <- "Tulipe"
    a[0].attaque <- 1
 
@@ -302,7 +302,7 @@ FinStructure
 -->
 
 ### Exercice: Définir une fonction de création d'une liste d'armures
-Définir la fonction `ListeDesArmures()` qui permet d'obtenir la liste des armures du jeu. La fonction doit retourner une liste de structure `Armure`. 
+Définir la fonction `ListeDesArmures()` qui permet d'obtenir la liste des armures du jeu. La fonction doit retourner une liste de structure `Armure`.
 
 <!--
 ```C
@@ -313,7 +313,7 @@ Fonction ListeDesArmures(): Armures[]
    // Creation d'une liste d'armures
    Armues[4] a
 
-   // Armure 1 
+   // Armure 1
    a[0].nom <- "T-shirt de Spider-man"
    a[0].defense <- 1
 
@@ -338,7 +338,7 @@ FinFonction
 ## La structure `Joueur`
 
 ### Exercice: Définir la structure `Joueur`
-Définir une structure qui permet de représenter un joueur. 
+Définir une structure qui permet de représenter un joueur.
 Un joueur doit avoir comme attributs:
 
 * Une position (_indice: Vous avez défini une structure `Position`_)
@@ -348,7 +348,7 @@ Un joueur doit avoir comme attributs:
 * Une armure de type `Armure`
 
 ### Exercice: Fonction de création d'un `Joueur`
-Définir une fonction pour créer et initialiser un nouveau joueur 
+Définir une fonction pour créer et initialiser un nouveau joueur
 
 ```C
 // Creation et initialisation d un nouveau joueur
@@ -389,7 +389,7 @@ Fonction TrouverEnnemi(Ennemi[] e, Position p): int
 ```
 
 ### Exercice: Fonction `AttaquerEnnemi(Joueur j, Ennemi e)`
-Définir des régles de combat et les implémenters. L'effet de l'attaque et de la défense? Une attaque par tour, ou jusqu'à ce mort s'en suive? Le joueur se déplace si il gagne le combat? .... 
+Définir des régles de combat et les implémenters. L'effet de l'attaque et de la défense? Une attaque par tour, ou jusqu'à ce mort s'en suive? Le joueur se déplace si il gagne le combat? ....
 
 
 ## Fonctions prédéfinies
@@ -424,7 +424,7 @@ Fonction Random(int a, int b): int
 ```
 
 ### Exercice: Liste aléatoire
-Écrire une fonction qui permet de faire un choix aléatoire dans une liste. 
+Écrire une fonction qui permet de faire un choix aléatoire dans une liste.
 
 ### Exercice (compliqué): Liste aléatoire avec poids
-Écrire une fonction qui permet de faire un choix aléatoire dans une liste avec poids, c'est-à-dire que chaque éléments de la liste est accompagnés d'un poids et que plus le poids est élevé, plus l'élément à des chances d'être choisi. 
+Écrire une fonction qui permet de faire un choix aléatoire dans une liste avec poids, c'est-à-dire que chaque éléments de la liste est accompagnés d'un poids et que plus le poids est élevé, plus l'élément à des chances d'être choisi.
