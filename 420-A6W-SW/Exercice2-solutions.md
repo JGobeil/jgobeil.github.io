@@ -206,6 +206,55 @@ Créer une procédure qui permet de rajouter les ennemis dans la carte.
 2. Ajouter les ennemis ( ennemis de niveau 1 et 2 seulement)
 3. Postionner de façon aléatoire dans la carte les ennemis. Ne pas les positionner sur des obstacles.
 
+```C
+// Peupler une carte 20x30 d'ennemis
+// Paramètres:
+//      Carte c: La carte
+//      Ennemi[] e: La liste d'ennemis
+Procedure AjouterEnnemis20x30(Carte c, Ennemi[] e):
+   // Creer une liste de 6 ennemis
+   c.ennemis <- Ennemi[6]
+
+   // Placer différent type d'ennemis dans la liste
+   Pour i de 0 à 5 Faire
+      Si i < 3 Alors
+         c.ennemis[i] <- e[0]
+      Sinon Si i < 5 Alors
+         c.ennemis[i] <- e[1]
+      Sinon
+         c.ennemis[i] <- e[3]
+      FinSi
+   FinPour
+
+   // Positionner le dragon
+   c.ennemis[5].pos <- CreerPosition(c.dim_x - 1, c.dim_y - 1)
+
+   // Positionner les autres ennemis
+   Pour i de 0 à 4 Faire
+      c.ennemis[i].pos <- PositionAleatoireLibre(c)
+   Fin Pour
+FinProcedure
+```
+
+```C
+// Trouver une position libre dans la carte
+// Paramètres:
+//      Carte c: La carte
+// Retourne: Position
+//      Une position libre dans la carte
+Fonction PositionAleatoireLibre(Carte c): Positon
+   Faire
+      Position p <- CreerPosition(Random(0, c.dim_x), Random(0, c.dim_y))
+      Booleen occupe <- Faux
+      Si EstUnObstacle(c, p) ou EstUnEnnemi(c.ennemi, p) Alors
+         occupe <- Vrai
+      FinSi
+   TantQue occupe == Vrai
+   Retourne p
+FinFonction
+```
+
+
 ## La structure `Position`
 
 Étant donnée que nous allons travailler régulièrement avec un binôme x et y, il serait pratique de créer une structure et quelques fonctions afin de faciliter leurs utilisation.
