@@ -246,13 +246,14 @@ Fonction PositionAleatoireLibre(Carte c): Positon
    Faire
       Position p <- CreerPosition(Random(0, c.dim_x-1), Random(0, c.dim_y-1))
       Booleen occupe <- Faux
-      Si EstUnObstacle(c, p) ou EstUnEnnemi(c.ennemi, p) Alors
+      Si EstUnObstacle(c, p) ou EstUnEnnemi(c.ennemis, p) Alors
          occupe <- Vrai
       FinSi
    TantQue occupe == Vrai
    Retourne p
 FinFonction
 ```
+
 
 
 ## La structure `Position`
