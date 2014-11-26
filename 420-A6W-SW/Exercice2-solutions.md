@@ -26,8 +26,6 @@ Fonction Main():
    Armure[] armures <- ListeDesArmures()
    Ennemi[] ennemis <- ListeDesEnnemis()
 
-   P
-
    // Creation du joueur
    Joueur joueur <- CreationJoueur(0, 0, 3, armes[0], armures[0])
 
@@ -92,6 +90,84 @@ Fonction Main():
       FinSi
    FinTantQue
 FinFonction
+```
+
+```C
+// Vérifier si un élément e apparait dans la liste liste
+// eliste.
+// Paramètres:
+//      type e: element à chercher
+//      type[] eliste: liste dans laquel chercher
+// Retourne: Booleen
+//      Retourne Vrai si e apparaît dans eliste, sinon Faux
+Fonction EstDans(type e): Booleen
+   Booleen estDansLaListe <- Faux
+   int i <- 0
+   TantQue i < Longueur(eliste) et estDansLaListe == Faux
+      Si e == eliste[i] Alors
+         estDansLaListe <- Vrai
+      FinSi
+      i++
+   FinTantQue
+   Retourne estDansLaListe
+FinFonction
+```
+
+Autre implémentation possible
+
+```C
+// Vérifier si un élément e apparait dans la liste liste
+// eliste.
+// Paramètres:
+//      type e: element à chercher
+//      type[] eliste: liste dans laquel chercher
+// Retourne: Booleen
+//      Retourne Vrai si e apparaît dans eliste, sinon Faux
+Fonction EstDans(type e): Booleen
+   Pour i de 0 a Longueur(eliste)-1 Faire
+      Si e == eliste[i] Alors
+         Retourne Vrai
+      FinSi
+   FinPour
+   Retourne Faux
+FinFonction
+```
+
+
+```C
+// Relier une touche à une action
+// Paramètres:
+//      char c: La touche appuyée
+// Retourne: String
+//      Un String correspondant à la touche appuyée
+Fonction ActionDeLaTouche(char c): String
+   Si estDans(c, ["w", "a", "s", "d"]) Alors
+      Retourne "deplacer"
+   FinSi
+FinFonction
+```
+
+```C
+// Calculer le deplacement correspondant a une touche
+// Paramètres:
+//      char c: La touche
+// Retourne: Position
+//      Le deplacement correspondant
+Fonction DeplacementDeLaTouche(char c): Position
+   Si c == "w" Alors
+      Retourne CreerPosition(0, -1)
+   Sinon Si c == "s" Alors
+      Retourne CreerPosition(0, 1)
+   Sinon Si c == "a" Alors
+      Retourne CreerPosition(-1, 0)
+   Sinon Si c == "d" Alors
+      Retourne CreerPosition(1, 0)
+   Sinon
+      // Pas supposé arrivé ici
+      AfficherMessage("Erreur deplacement")
+      Retourne CreerPosition(0, 0)
+   FinSi
+FinPosition
 ```
 
 ## La carte
@@ -613,6 +689,30 @@ Fonction TrouverEnnemi(Ennemi[] e, Position p): int
 
 ### Exercice: Fonction `AttaquerEnnemi(Joueur j, Ennemi e)`
 Définir des régles de combat et les implémenters. L'effet de l'attaque et de la défense? Une attaque par tour, ou jusqu'à ce mort s'en suive? Le joueur se déplace si il gagne le combat? ....
+
+```C
+// Effectuer une attaque sur un ennemi
+// Paramètres:
+//      Joueur joueur: Le joueur qui attaque
+//      Ennemi ennemi: L'ennemi
+Procedure AttaquerEnnemi(Joueur joueur, Ennemi ennemi)
+   int attaque <- joueur.arme.attaque - ennemi.defense
+   Si attaque > 0  Alors
+      ennemi.pv -= attaque
+   Sinon
+      AfficherMessage("Ce n'est pas très efficace!")
+   FinSi
+
+   Si ennemi.pv <= 0 Alors
+      attaque <- ennemi.attaque - joueur.armure.defense
+      Si attaque > 0  Alors
+         joueur.pv -= attaque
+      Sinon
+         AfficherMessage("L'ennemi de vous touche pas!")
+      FinSi
+   FinSi
+FinFonction
+```
 
 
 ## Fonctions prédéfinies
